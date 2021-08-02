@@ -3,7 +3,7 @@
 require "Date"
 require "optparse"
 
-def calendar(year: Date.today.year, month: Date.today.month)
+def calendar(year:, month:)
   firstday = Date.new(year, month, 1)
   firstday_wday = Date.new(year, month, 1).wday
   lastday = Date.new(year, month, -1)
@@ -18,14 +18,16 @@ def calendar(year: Date.today.year, month: Date.today.month)
   end
 end
 
-opts = ARGV.getopts("y:", "m:")
-case 
-when opts["y"] && opts["m"]
-  calendar(year: opts["y"].to_i, month: opts["m"].to_i)
-when opts["y"]
-  calendar(year: opts["y"].to_i)
-when opts["m"]
-  calendar(month: opts["m"].to_i)
-else
-  calendar()
-end
+
+opts = ARGV.getopts('y:', 'm:')
+year = if opts['y']
+         opts['y'].to_i
+       else
+         Date.today.year
+       end
+month = if opts['m']
+          opts['m'].to_i
+        else
+          Date.today.month
+        end
+calendar(year: year, month: month)
