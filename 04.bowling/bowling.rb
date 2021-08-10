@@ -1,13 +1,16 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+STRIKE_SCORE = 10
+THROWING_COUNT_UNTIL_NINE_FRAME = 18
+
 def get_frames(score)
   scores = score.split(',')
   shots = []
   scores.each do |s|
     if s == 'X'
-      shots << 10
-      shots << 0 if shots.size < 18
+      shots << STRIKE_SCORE
+      shots << 0 if shots.size < THROWING_COUNT_UNTIL_NINE_FRAME
     else
       shots << s.to_i
     end
