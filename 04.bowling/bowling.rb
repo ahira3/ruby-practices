@@ -31,7 +31,7 @@ def calc_score(frames)
   points = 0
   frames.each_with_index do |frame, i|
     points +=
-      if frame[0] == 10 && i < 9
+      if frame[0] == STRIKE_SCORE && i < 9
         calc_strike(frames, i)
       elsif frame.sum == 10 && frame[0] != 10
         frame.sum + frames[i + 1][0]
@@ -43,7 +43,7 @@ def calc_score(frames)
 end
 
 def calc_strike(frames, index)
-  if frames[index + 1][0] == 10
+  if frames[index + 1][0] == STRIKE_SCORE
     if index < 8
       10 + 10 + frames[index + 2][0]
     else
