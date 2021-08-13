@@ -39,22 +39,22 @@ end
 
 def convert_to_ftype(ftype)
   {
-    'file' => '-',
-    'directory' => 'd',
-    'characterSpecial' => 'c',
-    'blockSpecial' => 'b',
-    'fifo' => 'p',
-    'link' => 'l',
-    'socket' => 's'
-  }[ftype]
+    file: '-',
+    directory: 'd',
+    characterSpecial: 'c',
+    blockSpecial: 'b',
+    fifo: 'p',
+    link: 'l',
+    socket: 's'
+  }[ftype.to_sym]
 end
 
 def fetch_file_list
-  Dir.glob('*').sort
+  Dir.glob('*')
 end
 
 def fetch_all_file_list
-  Dir.glob('*', File::FNM_DOTMATCH).sort
+  Dir.glob('*', File::FNM_DOTMATCH)
 end
 
 def fetch_file_detail(file)
@@ -67,8 +67,8 @@ def fetch_file_detail(file)
   nlink = stats.nlink
   filesize = stats.size
   maketime = stats.mtime.strftime(' %-m  %-d %R')
-  { 'file_mode' => file_mode, 'nlink' => nlink, 'username' => username, 'groupname' => groupname, 'filesize' => filesize, 'maketime' => maketime,
-    'file' => file }
+  { file_mode: file_mode, nlink: nlink, username: username, groupname: groupname, filesize: filesize, maketime: maketime,
+    file: file }
 end
 
 def transpose_file_list(files)
@@ -83,32 +83,26 @@ def transpose_file_list(files)
 end
 
 def max_length_each_element(files, key)
-  max_length = []
   files.map do |file|
     info = fetch_file_detail(file)
-    max_length << info[key].to_s.size
-  end
-  max_length.max
+    info[key].to_s.size
+  end.max
 end
 
 def format_file_list_detail(files)
-  file_info = []
   files.map do |file|
     info = fetch_file_detail(file)
-    info['nlink'] = info['nlink'].to_s.rjust(max_length_each_element(files, 'nlink') + 1)
-    info['groupname'] = info['groupname'].rjust(max_length_each_element(files, 'groupname') + 1)
-    info['filesize'] = info['filesize'].to_s.rjust(max_length_each_element(files, 'filesize') + 1)
-    file_info << info.values.join(' ')
+    info[:nlink] = info[:nlink].to_s.rjust(max_length_each_element(files, :nlink) + 1)
+    info[:groupname] = info[:groupname].rjust(max_length_each_element(files, :groupname) + 1)
+    info[:filesize] = info[:filesize].to_s.rjust(max_length_each_element(files, :filesize) + 1)
+    info.values.join(' ')
   end
-  file_info
 end
 
 def calc_blocks(files)
-  total_blocks = 0
   files.map do |file|
-    total_blocks += File.stat(file).blocks
-  end
-  total_blocks
+    File.stat(file).blocks
+  end.sum
 end
 
 main
