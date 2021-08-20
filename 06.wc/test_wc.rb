@@ -5,7 +5,7 @@ require_relative './wc'
 
 class WcTest < Minitest::Test
   def setup
-    @input = File.read('a.txt')
+    @input = File.read('test1.txt')
   end
 
   def test_calc_number_of_line
@@ -26,8 +26,8 @@ class WcTest < Minitest::Test
   end
 
   def test_calc_some_file
-    files = ['a.txt', 'b.txt']
-    expected = [['       3', '       4', '      26', ' a.txt'], ['       6', '       8', '      54', ' b.txt'], ['       9', '      12', '      80', ' total']]
+    files = ['test1.txt', 'test2.txt']
+    expected = [['       3', '       4', '      26', ' test1.txt'], ['       6', '       8', '      54', ' test2.txt'], ['       9', '      12', '      80', ' total']]
     assert_equal expected, calc_some_files(files)
   end
 end
