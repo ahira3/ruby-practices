@@ -27,7 +27,8 @@ class WcTest < Minitest::Test
 
   def test_calc_some_file
     files = ['test1.txt', 'test2.txt']
-    expected = [['       3', '       4', '      26', ' test1.txt'], ['       6', '       8', '      54', ' test2.txt'], ['       9', '      12', '      80', ' total']]
+    expected = [['       3', '       4', '      26', ' test1.txt'], ['       6', '       8', '      54', ' test2.txt'],
+                ['       9', '      12', '      80', ' total']]
     assert_equal expected, calc_some_files(files)
   end
 end
