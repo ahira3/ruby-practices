@@ -4,25 +4,58 @@
 require 'optparse'
 
 def main
-  opt = ARGV.getopts('l')
-  files = ARGV
-  if opt['l']
-    if files.size > 1
-      print_l_option_some_files(files)
-    elsif files.size.zero?
-      input = $stdin.read
-      puts calc_number_of_line(input).to_s.rjust(8).to_s
-    else
-      puts "#{calc_number_of_line(File.read(files.first)).to_s.rjust(8)} #{files.first}"
-    end
-  elsif files.size.zero?
-    input = $stdin.read
-    print_file_info(calc_all_data(input))
-  elsif files.size > 1
-    print_some_files_info(calc_some_files(files))
+  opt_l, files = parse_input(args: ARGV)
+  calc_results = calc(files: files)
+  if calc_results.size <= 2
+    print_file_info(format(calc_results, opt_l))
   else
-    print_file_info(calc_all_data(File.read(files.first)))
-    print " #{files.first}"
+    print_some_files_info(format(calc_results, opt_l))
+  end
+end
+
+def parse_input(args:)
+  opt_l = args[0] == '-l'
+  if opt_l
+    [true, args[1..-1]]
+  else
+    [false, args[0..-1]]
+  end
+end
+
+def calc(files:)
+  if files.length >= 1
+    calc_some_files(files)
+  else
+    [calc_all_data($stdin.read)]
+  end
+end
+
+def format(calc_results, opt_l)
+  if opt_l
+    format_l_option(calc_results)
+  else
+    format_no_option(calc_results)
+  end
+end
+
+def format_l_option(calc_results)
+  case calc_results.size
+  when 1
+    [calc_results.first[0]]
+  when 2
+    [calc_results.first[0], calc_results.first[-1]]
+  else
+    calc_results.map do |result|
+      [result[0], result[-1]]
+    end
+  end
+end
+
+def format_no_option(calc_results)
+  if calc_results.size <= 2
+    calc_results.first
+  else
+    calc_results
   end
 end
 
@@ -68,15 +101,6 @@ def print_some_files_info(files_info)
     print_file_info(infos)
     puts
   end
-end
-
-def print_l_option_some_files(files)
-  total = 0
-  files.each do |file|
-    total += calc_number_of_line(File.read(file))
-    puts "#{calc_number_of_line(File.read(file)).to_s.rjust(8)} #{file}"
-  end
-  puts "#{total.to_s.rjust(8)} total"
 end
 
 def print_file_info(input)
