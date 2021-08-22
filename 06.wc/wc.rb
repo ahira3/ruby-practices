@@ -26,7 +26,7 @@ def calc(files:)
   if files.length >= 1
     calc_some_files(files)
   else
-    [calc_all_data($stdin.read)]
+    [calc_data($stdin.read)]
   end
 end
 
@@ -71,7 +71,7 @@ def calc_file_size(file_info)
   file_info.bytesize
 end
 
-def calc_all_data(file_info)
+def calc_data(file_info)
   lines = calc_number_of_line(file_info).to_s.rjust(8)
   words = calc_number_of_word(file_info).to_s.rjust(8)
   bytes = calc_file_size(file_info).to_s.rjust(8)
@@ -88,7 +88,7 @@ def calc_some_files(files)
     lines_total += calc_number_of_line(file_info)
     words_total += calc_number_of_word(file_info)
     bytes_total += calc_file_size(file_info)
-    files_info << calc_all_data(file_info)
+    files_info << calc_data(file_info)
   end
   files_info.each_with_index do |info, i|
     info << " #{files[i]}"
